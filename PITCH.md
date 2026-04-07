@@ -159,4 +159,3 @@ The app ships in:
 
 ---
 
-*Prepared by OCS Consulting*
