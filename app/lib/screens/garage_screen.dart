@@ -14,14 +14,16 @@ class GarageScreen extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 24),
         child: Column(
           children: [
+            const SizedBox(height: 4),
             _VehicleCard(
               name: 'Ducati Panigale V4S',
-              type: 'Motorcycle',
-              emoji: '🏍️',
-              suspensions: const [
-                _SuspInfo('Front: Ohlins NIX30', 'Service due in 800 km', SuspStatus.warning),
-                _SuspInfo('Rear: Ohlins TTX36', 'Good', SuspStatus.good),
-              ],
+              frontLabel: 'Front: Öhlins NIX30',
+              frontStatus: 'Service due in 800 km',
+              frontWarning: true,
+              rearLabel: 'Rear: Öhlins TTX36',
+              rearStatus: 'Good',
+              rearWarning: false,
+              imagePath: 'assets/images/ducati.jpg',
               onTap: () => Navigator.pushNamed(context, '/dyno'),
               onServiceHistory: () => Navigator.pushNamed(context, '/service-book'),
               onSetupNotes: () => Navigator.pushNamed(context, '/setup'),
@@ -29,39 +31,45 @@ class GarageScreen extends StatelessWidget {
             ),
             _VehicleCard(
               name: 'BMW M3 G80',
-              type: 'Car',
-              emoji: '🚗',
-              suspensions: const [
-                _SuspInfo('Front: Ohlins R&T', 'Last serviced: Jan 2026', SuspStatus.good),
-                _SuspInfo('Rear: Ohlins R&T', 'Good', SuspStatus.good),
-              ],
+              frontLabel: 'Front: Öhlins R&T',
+              frontStatus: 'Last serviced: Jan 2026',
+              frontWarning: false,
+              rearLabel: 'Rear: Öhlins R&T',
+              rearStatus: 'Good',
+              rearWarning: false,
+              imagePath: 'assets/images/bmw_m3.jpg',
               onTap: () {},
               onServiceHistory: () => Navigator.pushNamed(context, '/service-book'),
               onSetupNotes: () => Navigator.pushNamed(context, '/setup'),
               onBookService: () => Navigator.pushNamed(context, '/book-service'),
             ),
             _VehicleCard(
-              name: 'Santa Cruz Megatower',
-              type: 'Mountain Bike',
-              emoji: '🚲',
-              suspensions: const [
-                _SuspInfo('Fox 36 + Andreani Cartridge Kit', 'Good', SuspStatus.good),
-              ],
+              name: 'Santa Cruz Megatower MTB',
+              frontLabel: 'Fox 33 with Andreani',
+              frontStatus: 'Cartridge Kit',
+              frontWarning: false,
+              rearLabel: null,
+              rearStatus: null,
+              rearWarning: false,
+              imagePath: 'assets/images/mtb.jpg',
               onTap: () {},
               onServiceHistory: () => Navigator.pushNamed(context, '/service-book'),
               onSetupNotes: () => Navigator.pushNamed(context, '/setup'),
               onBookService: () => Navigator.pushNamed(context, '/book-service'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
+            // Add Vehicle button — matching mockup's red + centered style
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: OutlinedButton.icon(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: ElevatedButton.icon(
                 onPressed: () {},
-                icon: const Icon(Icons.add, color: AppColors.red),
-                label: Text('Add Vehicle', style: GoogleFonts.inter(color: AppColors.red, fontWeight: FontWeight.w700)),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                  side: const BorderSide(color: AppColors.border, width: 2, style: BorderStyle.solid),
+                icon: const Icon(Icons.add, size: 18),
+                label: Text('Add Vehicle', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.red,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(46),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                 ),
               ),
             ),
@@ -72,25 +80,24 @@ class GarageScreen extends StatelessWidget {
   }
 }
 
-enum SuspStatus { good, warning, due }
-
-class _SuspInfo {
-  final String label;
-  final String status;
-  final SuspStatus level;
-  const _SuspInfo(this.label, this.status, this.level);
-}
-
 class _VehicleCard extends StatelessWidget {
-  final String name, type, emoji;
-  final List<_SuspInfo> suspensions;
+  final String name;
+  final String frontLabel, frontStatus;
+  final bool frontWarning;
+  final String? rearLabel, rearStatus;
+  final bool rearWarning;
+  final String imagePath;
   final VoidCallback onTap, onServiceHistory, onSetupNotes, onBookService;
 
   const _VehicleCard({
     required this.name,
-    required this.type,
-    required this.emoji,
-    required this.suspensions,
+    required this.frontLabel,
+    required this.frontStatus,
+    required this.frontWarning,
+    this.rearLabel,
+    this.rearStatus,
+    required this.rearWarning,
+    required this.imagePath,
     required this.onTap,
     required this.onServiceHistory,
     required this.onSetupNotes,
@@ -99,76 +106,124 @@ class _VehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        padding: const EdgeInsets.fromLTRB(16, 16, 8, 12),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top row: text left, image right (matching mockup layout)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left: name + suspension info
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(name, style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700)),
-                      Text(type, style: GoogleFonts.inter(fontSize: 11, color: AppColors.textMuted, letterSpacing: 1)),
+                      Text(
+                        name,
+                        style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white),
+                      ),
+                      const SizedBox(height: 8),
+                      // Front suspension
+                      Text(frontLabel, style: GoogleFonts.inter(fontSize: 13, color: AppColors.textMuted)),
+                      Row(
+                        children: [
+                          Text(
+                            frontStatus,
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: frontWarning ? AppColors.yellow : AppColors.green,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            frontWarning ? '⚠' : '✓',
+                            style: TextStyle(fontSize: 13, color: frontWarning ? AppColors.yellow : AppColors.green),
+                          ),
+                        ],
+                      ),
+                      if (rearLabel != null) ...[
+                        const SizedBox(height: 6),
+                        Text(rearLabel!, style: GoogleFonts.inter(fontSize: 13, color: AppColors.textMuted)),
+                        Row(
+                          children: [
+                            Text(
+                              rearStatus ?? 'Good',
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: rearWarning ? AppColors.yellow : AppColors.green,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text('✓', style: TextStyle(fontSize: 13, color: AppColors.green)),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
-                  Text(emoji, style: const TextStyle(fontSize: 40)),
-                ],
-              ),
-              const SizedBox(height: 12),
-              ...suspensions.map((s) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(s.label, style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
-                    Text(
-                      s.level == SuspStatus.warning ? '${s.status} ⚠️' : '${s.status} ✓',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: s.level == SuspStatus.good
-                            ? AppColors.green
-                            : s.level == SuspStatus.warning
-                                ? AppColors.yellow
-                                : AppColors.red,
-                      ),
-                    ),
-                  ],
                 ),
-              )),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: onServiceHistory,
-                      child: const Text('History'),
-                    ),
+                // Right: actual vehicle photo (matching mockup)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    imagePath,
+                    width: 110,
+                    height: 80,
+                    fit: BoxFit.cover,
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: onSetupNotes,
-                      child: const Text('Setup'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: onBookService,
-                      child: const Text('Book'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Bottom action buttons — matching mockup's 3-button row
+            Row(
+              children: [
+                _ActionButton(label: 'Service History', onTap: onServiceHistory),
+                const SizedBox(width: 8),
+                _ActionButton(label: 'Setup Notes', onTap: onSetupNotes),
+                const SizedBox(width: 8),
+                _ActionButton(label: 'Book Service', onTap: onBookService),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const _ActionButton({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.background,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white),
           ),
         ),
       ),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "24992281168",
+    "project_id": "andreani-group-app",
+    "storage_bucket": "andreani-group-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24992281168:android:dc769f9cf1454f60ac1755",
+        "android_client_info": {
+          "package_name": "com.andreanigroup.andreani_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCG9lpnwwJ4V7I_MheYdQdtOEGPPN1duUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

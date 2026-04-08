@@ -17,8 +17,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCG9lpnwwJ4V7I_MheYdQdtOEGPPN1duUY',
-    appId: '1:24992281168:web:andreani_group_web',
+    apiKey: 'AIzaSyCwJHqsDQHviaDZ3kqtTEJDJ9y2drkL0nY',
+    appId: '1:24992281168:web:0e431a76ddaf3e2fac1755',
     messagingSenderId: '24992281168',
     projectId: 'andreani-group-app',
     storageBucket: 'andreani-group-app.firebasestorage.app',

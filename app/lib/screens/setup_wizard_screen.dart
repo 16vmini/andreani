@@ -14,96 +14,192 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
   double _preload = 10;
   double _compression = 12;
   double _rebound = 11;
-  int _activeStep = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: andreaniAppBar(context, 'SETUP WIZARD'),
+      appBar: andreaniAppBar(context, 'GROUP'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bike info
+            // Bike info row — thumbnail + details (matching mockup)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
               child: Row(
                 children: [
-                  const Text('🏍️', style: TextStyle(fontSize: 50)),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Yamaha R1 2024', style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text('Weight ', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
-                          Text('82 kg', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600)),
-                          const SizedBox(width: 16),
-                          Text('Style ', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
-                          Text('Sport/Track', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                      Text('Experience: Advanced', style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
-                    ],
+                  // Bike thumbnail — real image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'assets/images/ducati.jpg',
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Yamaha R1 2024', style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w800)),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            _InfoLabel('Weight', '82 kg'),
+                            const SizedBox(width: 24),
+                            _InfoLabel('Riding Style', 'Sport/Track'),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            _InfoLabel('Experience', 'Advanced'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 16),
-            // Steps
-            Row(
-              children: [
-                _StepTab(label: 'Start', active: _activeStep == 0, done: _activeStep > 0, onTap: () => setState(() => _activeStep = 0)),
-                _StepTab(label: 'Front Fork Setup', active: _activeStep == 1, done: _activeStep > 1, onTap: () => setState(() => _activeStep = 1)),
-                _StepTab(label: 'Rear Shock', active: _activeStep == 2, done: false, onTap: () => setState(() => _activeStep = 2)),
-              ],
-            ),
-            const SizedBox(height: 20),
-            // Sliders
-            _buildSlider('Preload', _preload, 0, 20, 'mm', (v) => setState(() => _preload = v)),
-            _buildSlider('Compression', _compression, 0, 25, 'click', (v) => setState(() => _compression = v)),
-            _buildSlider('Rebound', _rebound, 0, 25, 'click', (v) => setState(() => _rebound = v)),
-            const SizedBox(height: 8),
-            // Recommended values
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('RECOMMENDED VALUES', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.green, letterSpacing: 1)),
-                  const SizedBox(height: 8),
-                  _recRow('Preload', '12 mm'),
-                  _recRow('Compression', '12 click'),
-                  _recRow('Rebound', '11 click'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Buttons
+
+            // Step breadcrumbs — "Start > Front Fork Setup" (matching mockup)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Expanded(child: ElevatedButton(onPressed: () {}, child: const Text('Save Setup'))),
-                  const SizedBox(width: 10),
-                  Expanded(child: OutlinedButton(onPressed: () {}, child: const Text('Compare to Pro'))),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text('Start', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textMuted)),
+                  ),
+                  Text(' › ', style: GoogleFonts.inter(fontSize: 16, color: AppColors.textMuted)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF222222),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Text('Front Fork Setup', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 12),
-            Center(
+            const SizedBox(height: 20),
+
+            // Fork diagram + sliders section (matching mockup layout)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Fork illustration — left side
+                  SizedBox(
+                    width: 80,
+                    height: 220,
+                    child: CustomPaint(painter: _ForkDiagramPainter()),
+                  ),
+                  const SizedBox(width: 12),
+                  // Sliders — right side
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _SliderRow(
+                          label: 'Preload',
+                          value: _preload,
+                          min: 0, max: 20,
+                          unit: 'mm',
+                          onChanged: (v) => setState(() => _preload = v),
+                        ),
+                        const SizedBox(height: 16),
+                        _SliderRow(
+                          label: 'Compression',
+                          value: _compression,
+                          min: 0, max: 25,
+                          unit: 'click',
+                          onChanged: (v) => setState(() => _compression = v),
+                        ),
+                        const SizedBox(height: 16),
+                        _SliderRow(
+                          label: 'Rebound',
+                          value: _rebound,
+                          min: 0, max: 25,
+                          unit: 'click',
+                          onChanged: (v) => setState(() => _rebound = v),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Recommended values section (matching mockup)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Text(
-                'Based on Andreani racing data from 1,000+ track sessions',
-                style: GoogleFonts.inter(fontSize: 11, color: AppColors.textMuted),
+                'Recommended values',
+                style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textMuted),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  _RecSlider(label: 'Compression', value: 12, max: 25, unit: 'click'),
+                  const SizedBox(height: 8),
+                  _RecSlider(label: 'Rebound', value: 11, max: 25, unit: 'click'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Buttons — Save Setup (red) + Compare to Pro (outlined)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700),
+                      ),
+                      child: const Text('Save Setup'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700),
+                      ),
+                      child: const Text('Compare to\nPro Settings', textAlign: TextAlign.center),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Footer note
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Based on Andreani racing data\nfrom 1,000+ track sessions',
+                style: GoogleFonts.inter(fontSize: 11, color: AppColors.textMuted, height: 1.4),
               ),
             ),
           ],
@@ -111,96 +207,172 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
       ),
     );
   }
+}
 
-  Widget _buildSlider(String label, double value, double min, double max, String unit, ValueChanged<double> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(label, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text('${value.round()}', style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.red)),
-                  const SizedBox(width: 4),
-                  Text(unit, style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          SliderTheme(
-            data: SliderThemeData(
-              activeTrackColor: AppColors.red,
-              inactiveTrackColor: AppColors.border,
-              thumbColor: AppColors.red,
-              overlayColor: AppColors.red.withAlpha(30),
-              trackHeight: 6,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 11, elevation: 0),
-            ),
-            child: Slider(
-              value: value,
-              min: min,
-              max: max,
-              divisions: (max - min).round(),
-              onChanged: onChanged,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+class _InfoLabel extends StatelessWidget {
+  final String label, value;
+  const _InfoLabel(this.label, this.value);
 
-  Widget _recRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: GoogleFonts.inter(fontSize: 13, color: AppColors.textMuted)),
-          Text(value, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.green)),
-        ],
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(label, style: GoogleFonts.inter(fontSize: 12, color: AppColors.textMuted)),
+        const SizedBox(width: 6),
+        Text(value, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
+      ],
     );
   }
 }
 
-class _StepTab extends StatelessWidget {
-  final String label;
-  final bool active, done;
-  final VoidCallback onTap;
-  const _StepTab({required this.label, required this.active, required this.done, required this.onTap});
+class _SliderRow extends StatelessWidget {
+  final String label, unit;
+  final double value, min, max;
+  final ValueChanged<double> onChanged;
+
+  const _SliderRow({
+    required this.label,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.unit,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: active ? AppColors.red : done ? AppColors.green : AppColors.border,
-                width: 3,
-              ),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textMuted)),
+            Text(
+              '${value.round()} $unit',
+              style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.green),
             ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        SliderTheme(
+          data: SliderThemeData(
+            activeTrackColor: AppColors.red,
+            inactiveTrackColor: AppColors.border,
+            thumbColor: AppColors.red,
+            overlayColor: AppColors.red.withAlpha(30),
+            trackHeight: 4,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8, elevation: 0),
           ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: active ? AppColors.red : done ? AppColors.green : AppColors.textMuted,
-            ),
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            divisions: (max - min).round(),
+            onChanged: onChanged,
           ),
         ),
-      ),
+      ],
     );
   }
+}
+
+class _RecSlider extends StatelessWidget {
+  final String label, unit;
+  final double value, max;
+  const _RecSlider({required this.label, required this.value, required this.max, required this.unit});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text('${value.round()} $unit', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.red)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: SliderTheme(
+            data: SliderThemeData(
+              activeTrackColor: AppColors.red,
+              inactiveTrackColor: AppColors.border,
+              thumbColor: AppColors.red,
+              overlayColor: Colors.transparent,
+              trackHeight: 4,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6, elevation: 0),
+            ),
+            child: Slider(value: value, min: 0, max: max, onChanged: null),
+          ),
+        ),
+        Text('${max.round()} $unit', style: GoogleFonts.inter(fontSize: 11, color: AppColors.textMuted)),
+      ],
+    );
+  }
+}
+
+/// Custom painter for the fork diagram illustration (matching mockup's technical drawing)
+class _ForkDiagramPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors.textMuted
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke;
+
+    final cx = size.width / 2;
+    final h = size.height;
+
+    // Upper tube
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx - 8, 0, 16, h * 0.45), const Radius.circular(4)),
+      paint,
+    );
+
+    // Lower tube (wider)
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx - 12, h * 0.4, 24, h * 0.55), const Radius.circular(6)),
+      paint,
+    );
+
+    // Adjustment knobs (red dots — compression/rebound points)
+    final knobPaint = Paint()..color = AppColors.red..style = PaintingStyle.fill;
+    // Top knob (preload)
+    canvas.drawCircle(Offset(cx + 18, h * 0.08), 5, knobPaint);
+    // Middle knob (compression)
+    canvas.drawCircle(Offset(cx + 22, h * 0.48), 5, knobPaint);
+    // Bottom knob (rebound)
+    canvas.drawCircle(Offset(cx + 22, h * 0.78), 5, knobPaint);
+
+    // Connection lines from knobs
+    final linePaint = Paint()
+      ..color = AppColors.red.withAlpha(100)
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+    canvas.drawLine(Offset(cx + 8, h * 0.08), Offset(cx + 13, h * 0.08), linePaint);
+    canvas.drawLine(Offset(cx + 12, h * 0.48), Offset(cx + 17, h * 0.48), linePaint);
+    canvas.drawLine(Offset(cx + 12, h * 0.78), Offset(cx + 17, h * 0.78), linePaint);
+
+    // Spring coil inside upper tube
+    final springPaint = Paint()
+      ..color = AppColors.textMuted.withAlpha(120)
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+    final springPath = Path();
+    const coils = 6;
+    final coilStart = h * 0.06;
+    final coilEnd = h * 0.38;
+    final coilH = (coilEnd - coilStart) / coils;
+    springPath.moveTo(cx, coilStart);
+    for (var i = 0; i < coils; i++) {
+      final y1 = coilStart + i * coilH + coilH * 0.5;
+      final y2 = coilStart + (i + 1) * coilH;
+      springPath.lineTo(i.isEven ? cx + 5 : cx - 5, y1);
+      springPath.lineTo(cx, y2);
+    }
+    canvas.drawPath(springPath, springPaint);
+
+    // Axle circle at bottom
+    canvas.drawCircle(Offset(cx, h * 0.92), 6, paint);
+    final axleFill = Paint()..color = AppColors.textMuted.withAlpha(50)..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(cx, h * 0.92), 6, axleFill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
