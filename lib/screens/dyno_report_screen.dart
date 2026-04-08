@@ -24,7 +24,7 @@ class DynoReportScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'SUSPENSION DYNO REPORT',
+                      'DIGITAL DYNO REPORT',
                       style: GoogleFonts.poppins(
                         color: AppTheme.textPrimary,
                         fontSize: 20,

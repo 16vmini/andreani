@@ -42,32 +42,37 @@ class HomeScreen extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         _HomeTileCustom(
-                          label: 'My Suspension',
+                          label: 'My Garage',
+                          phase: 1,
                           color: AppTheme.primaryRed,
                           child: CustomPaint(size: const Size(48, 48), painter: _SpringIconPainter()),
                           onTap: () {},
                         ),
                         _HomeTileCustom(
-                          label: 'Book Service',
-                          color: AppTheme.tileGray,
-                          child: CustomPaint(size: const Size(48, 48), painter: _SpannerIconPainter()),
-                          onTap: () {},
-                        ),
-                        _HomeTileCustom(
                           label: 'Dyno Reports',
+                          phase: 1,
                           color: AppTheme.tileBlue,
                           child: CustomPaint(size: const Size(48, 48), painter: _DynoIconPainter()),
                           onTap: () {},
                         ),
-                        _OhlinsTile(onTap: () {}),
                         _HomeTileCustom(
-                          label: 'Find Dealer',
+                          label: 'Find Centre',
+                          phase: 1,
                           color: AppTheme.tileGreen,
                           child: const Icon(Icons.location_on, color: Colors.white, size: 42),
                           onTap: () {},
                         ),
                         _HomeTileCustom(
+                          label: 'Setup Wizard',
+                          phase: 2,
+                          color: AppTheme.tileGray,
+                          child: CustomPaint(size: const Size(48, 48), painter: _SpannerIconPainter()),
+                          onTap: () {},
+                        ),
+                        _OhlinsTile(onTap: () {}),
+                        _HomeTileCustom(
                           label: 'Racing Service',
+                          phase: 3,
                           color: AppTheme.primaryRed,
                           child: CustomPaint(size: const Size(48, 48), painter: _CheckeredFlagPainter()),
                           onTap: () {},
@@ -99,27 +104,15 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '35 ',
-                              style: GoogleFonts.poppins(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w700,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'YEARS',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textSecondary,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ],
+                      Expanded(
+                        child: Text(
+                          '35 years of world championship\nsuspension knowledge',
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: AppTheme.textSecondary,
+                            height: 1.4,
+                          ),
                         ),
                       ),
                     ],
@@ -139,12 +132,14 @@ class _HomeTileCustom extends StatelessWidget {
   final Color color;
   final Widget child;
   final VoidCallback onTap;
+  final int phase;
 
   const _HomeTileCustom({
     required this.label,
     required this.color,
     required this.child,
     required this.onTap,
+    this.phase = 1,
   });
 
   @override
@@ -161,7 +156,31 @@ class _HomeTileCustom extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              child,
+              Stack(
+                children: [
+                  child,
+                  if (phase > 1)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'P$phase',
+                          style: GoogleFonts.poppins(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            color: phase == 2 ? AppTheme.serviceWarning : AppTheme.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               Text(
                 label,
                 style: GoogleFonts.poppins(
