@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
-import '../widgets/vehicle_card.dart';
+import '../widgets/andreani_logo.dart';
 
 class MyGarageScreen extends StatelessWidget {
   const MyGarageScreen({super.key});
@@ -9,315 +9,273 @@ class MyGarageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.primaryGradient,
+      backgroundColor: AppTheme.primaryBlack,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                children: [
+                  _VehicleCard(
+                    name: 'Ducati Panigale V4S',
+                    frontSuspension: 'Öhlins NIX30',
+                    rearSuspension: 'Öhlins TTX36',
+                    frontStatus: 'Service due in 800 km',
+                    frontStatusBad: true,
+                    rearStatus: 'Good',
+                    rearStatusBad: false,
+                    vehicleEmoji: '🏍️',
+                    vehicleColor: const Color(0xFFCC0000),
+                  ),
+                  const SizedBox(height: 12),
+                  _VehicleCard(
+                    name: 'BMW M3 G80',
+                    frontSuspension: 'Öhlins R&T',
+                    rearSuspension: 'Öhlins R&T',
+                    frontStatus: 'Last serviced: Jan 2026',
+                    frontStatusBad: false,
+                    rearStatus: 'Good',
+                    rearStatusBad: false,
+                    vehicleEmoji: '🚗',
+                    vehicleColor: const Color(0xFF1A1A2E),
+                  ),
+                  const SizedBox(height: 12),
+                  _VehicleCard(
+                    name: 'Santa Cruz Megatower MTB',
+                    frontSuspension: 'Fox 33 with Andreani',
+                    rearSuspension: 'Cartridge Kit',
+                    frontStatus: 'Good',
+                    frontStatusBad: false,
+                    rearStatus: 'Good',
+                    rearStatusBad: false,
+                    vehicleEmoji: '🚵',
+                    vehicleColor: const Color(0xFF8B1A1A),
+                  ),
+                  const SizedBox(height: 20),
+                  // Add Vehicle button
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppTheme.primaryRed, width: 1.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.add, color: AppTheme.primaryRed),
+                      label: Text(
+                        'Add Vehicle',
+                        style: GoogleFonts.poppins(
+                          color: AppTheme.primaryRed,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ],
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(context),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildGarageStats(),
-                        const SizedBox(height: 30),
-                        _buildVehiclesList(),
-                        const SizedBox(height: 30),
-                        _buildAddVehicleCard(),
-                      ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        children: [
+          const AndreaniLogoSmall(),
+          const SizedBox(width: 12),
+          Text(
+            'MY GARAGE',
+            style: GoogleFonts.poppins(
+              color: AppTheme.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VehicleCard extends StatelessWidget {
+  final String name;
+  final String frontSuspension;
+  final String rearSuspension;
+  final String frontStatus;
+  final bool frontStatusBad;
+  final String rearStatus;
+  final bool rearStatusBad;
+  final String vehicleEmoji;
+  final Color vehicleColor;
+
+  const _VehicleCard({
+    required this.name,
+    required this.frontSuspension,
+    required this.rearSuspension,
+    required this.frontStatus,
+    required this.frontStatusBad,
+    required this.rearStatus,
+    required this.rearStatusBad,
+    required this.vehicleEmoji,
+    required this.vehicleColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.cardDark,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppTheme.cardBorder, width: 1),
+      ),
+      child: Column(
+        children: [
+          // Vehicle name + image
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: GoogleFonts.poppins(
+                          color: AppTheme.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      _StatusRow(label: 'Front: $frontSuspension', status: frontStatus, isBad: frontStatusBad),
+                      const SizedBox(height: 4),
+                      _StatusRow(label: 'Rear: $rearSuspension', status: rearStatus, isBad: rearStatusBad),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 90,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: vehicleColor.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      vehicleEmoji,
+                      style: const TextStyle(fontSize: 40),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppBar(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: AppTheme.textPrimary,
-                size: 20,
-              ),
+              ],
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Action buttons
+          const SizedBox(height: 12),
+          const Divider(color: AppTheme.cardBorder, height: 1),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Row(
               children: [
-                Text(
-                  'My Garage',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    color: AppTheme.textPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  '3 vehicles registered',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: AppTheme.textSecondary,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+                _ActionBtn(label: 'Service History', onTap: () {}),
+                const SizedBox(width: 8),
+                _ActionBtn(label: 'Setup Notes', onTap: () {}),
+                const SizedBox(width: 8),
+                _ActionBtn(label: 'Book Service', onTap: () {}),
               ],
             ),
           ),
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              gradient: AppTheme.accentGradient,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryRed.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.notifications,
-              color: AppTheme.textPrimary,
-              size: 20,
-            ),
-          ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildGarageStats() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem('Total Mileage', '45,230 km', Icons.speed, AppTheme.primaryRed),
-          Container(width: 1, height: 40, color: Colors.white.withOpacity(0.1)),
-          _buildStatItem('Services Due', '1', Icons.build, AppTheme.accent),
-          Container(width: 1, height: 40, color: Colors.white.withOpacity(0.1)),
-          _buildStatItem('Total Vehicles', '3', Icons.garage, const Color(0xFF4CAF50)),
-        ],
-      ),
-    );
-  }
+class _StatusRow extends StatelessWidget {
+  final String label;
+  final String status;
+  final bool isBad;
 
-  Widget _buildStatItem(String title, String value, IconData icon, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: color.withOpacity(0.3),
-              width: 1,
-            ),
-          ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          title,
-          style: GoogleFonts.poppins(
-            fontSize: 10,
-            color: AppTheme.textSecondary,
-            fontWeight: FontWeight.w400,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
+  const _StatusRow({required this.label, required this.status, required this.isBad});
 
-  Widget _buildVehiclesList() {
-    final vehicles = [
-      {
-        'name': '2020 Ducati Panigale V4',
-        'model': 'Panigale V4',
-        'mileage': '12,450 km',
-        'suspension': 'Öhlins NIX30',
-        'serviceStatus': 'Due in 30 days',
-        'isServiceDue': true,
-        'image': 'motorcycle',
-        'color': AppTheme.primaryRed,
-      },
-      {
-        'name': '2019 BMW M3',
-        'model': 'M3 Competition',
-        'mileage': '28,750 km',
-        'suspension': 'Öhlins Road & Track',
-        'serviceStatus': 'Next service: June 2024',
-        'isServiceDue': false,
-        'image': 'car',
-        'color': const Color(0xFF2196F3),
-      },
-      {
-        'name': '2021 KTM 450 SX-F',
-        'model': '450 SX-F',
-        'mileage': '4,030 km',
-        'suspension': 'Andreani Cartridge Kit',
-        'serviceStatus': 'Recently serviced',
-        'isServiceDue': false,
-        'image': 'motorcycle',
-        'color': AppTheme.accent,
-      },
-    ];
-
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your Vehicles',
+          label,
           style: GoogleFonts.poppins(
-            fontSize: 20,
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.w600,
+            color: AppTheme.textSecondary,
+            fontSize: 12,
           ),
         ),
-        const SizedBox(height: 16),
-        ...vehicles.map((vehicle) => Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: VehicleCard(
-            name: vehicle['name'] as String,
-            model: vehicle['model'] as String,
-            mileage: vehicle['mileage'] as String,
-            suspension: vehicle['suspension'] as String,
-            serviceStatus: vehicle['serviceStatus'] as String,
-            isServiceDue: vehicle['isServiceDue'] as bool,
-            vehicleIcon: vehicle['image'] == 'car' ? Icons.directions_car : Icons.motorcycle,
-            color: vehicle['color'] as Color,
-            onTap: () {},
-          ),
-        )),
+        Row(
+          children: [
+            Text(
+              status,
+              style: GoogleFonts.poppins(
+                color: isBad ? AppTheme.serviceWarning : AppTheme.statusGood,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              isBad ? Icons.warning_amber_rounded : Icons.check_circle,
+              color: isBad ? AppTheme.serviceWarning : AppTheme.statusGood,
+              size: 14,
+            ),
+          ],
+        ),
       ],
     );
   }
+}
 
-  Widget _buildAddVehicleCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppTheme.primaryRed.withOpacity(0.1),
-            AppTheme.primaryRed.withOpacity(0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppTheme.primaryRed.withOpacity(0.3),
-          width: 1.5,
-        ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              gradient: AppTheme.accentGradient,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryRed.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.add,
-              color: AppTheme.textPrimary,
-              size: 28,
-            ),
+class _ActionBtn extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionBtn({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          decoration: BoxDecoration(
+            color: const Color(0xFF252525),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: const Color(0xFF333333), width: 1),
           ),
-          const SizedBox(height: 16),
-          Text(
-            'Add New Vehicle',
+          child: Text(
+            label,
             style: GoogleFonts.poppins(
-              fontSize: 18,
               color: AppTheme.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Register your motorcycle, car, or MTB to track maintenance and suspension setup',
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: AppTheme.textSecondary,
-              fontWeight: FontWeight.w400,
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Register Vehicle'),
-          ),
-        ],
+        ),
       ),
     );
   }

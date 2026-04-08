@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
-import '../widgets/feature_card.dart';
-import '../widgets/stats_card.dart';
-import 'my_garage_screen.dart';
-import 'dyno_report_screen.dart';
-import 'setup_wizard_screen.dart';
+import '../widgets/andreani_logo.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,334 +9,227 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.primaryGradient,
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(context),
-                  const SizedBox(height: 30),
-                  _buildStatsSection(),
-                  const SizedBox(height: 30),
-                  _buildQuickActions(context),
-                  const SizedBox(height: 30),
-                  _buildFeaturesGrid(context),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: AppTheme.primaryBlack,
+      body: Stack(
+        children: [
+          // Carbon fibre texture overlay
+          Positioned.fill(child: _CarbonFibreBackground()),
+          SafeArea(
+            child: Column(
               children: [
+                const SizedBox(height: 24),
+                const AndreaniLogo(),
+                const SizedBox(height: 8),
                 Text(
-                  'Welcome to',
+                  'Suspension Excellence Since 1987',
                   style: GoogleFonts.poppins(
-                    fontSize: 16,
                     color: AppTheme.textSecondary,
+                    fontSize: 13,
                     fontWeight: FontWeight.w400,
+                    letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      'ANDREANI',
-                      style: GoogleFonts.poppins(
-                        fontSize: 28,
-                        color: AppTheme.textPrimary,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 2,
-                      ),
+                const SizedBox(height: 32),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 1.1,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        _HomeTile(
+                          label: 'My Suspension',
+                          icon: Icons.settings_input_component,
+                          color: AppTheme.primaryRed,
+                          onTap: () {},
+                        ),
+                        _HomeTile(
+                          label: 'Book Service',
+                          icon: Icons.build_outlined,
+                          color: AppTheme.tileGray,
+                          onTap: () {},
+                        ),
+                        _HomeTile(
+                          label: 'Dyno Reports',
+                          icon: Icons.show_chart,
+                          color: AppTheme.tileBlue,
+                          onTap: () {},
+                        ),
+                        _HomeTile(
+                          label: 'Öhlins Catalogue',
+                          icon: Icons.menu_book_outlined,
+                          color: AppTheme.ohlinsGold,
+                          isOhlins: true,
+                          onTap: () {},
+                        ),
+                        _HomeTile(
+                          label: 'Find Dealer',
+                          icon: Icons.location_on_outlined,
+                          color: AppTheme.tileGreen,
+                          onTap: () {},
+                        ),
+                        _HomeTile(
+                          label: 'Racing Service',
+                          icon: Icons.flag_outlined,
+                          color: AppTheme.primaryRed,
+                          onTap: () {},
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryRed,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        'PRO',
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          color: AppTheme.textPrimary,
-                          fontWeight: FontWeight.w600,
+                  ),
+                ),
+                // Bottom badge strip
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppTheme.ohlinsGold,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'ÖHLINS\nOFFICIAL PARTNER',
+                          style: GoogleFonts.poppins(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                            height: 1.3,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 16),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '35 ',
+                              style: GoogleFonts.poppins(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'YEARS',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textSecondary,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                gradient: AppTheme.accentGradient,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primaryRed.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.settings,
-                color: AppTheme.textPrimary,
-                size: 24,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Suspension Excellence Since 1987',
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            color: AppTheme.textSecondary,
-            fontWeight: FontWeight.w400,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+}
 
-  Widget _buildStatsSection() {
-    return Row(
-      children: [
-        Expanded(
-          child: StatsCard(
-            title: 'Active Vehicles',
-            value: '3',
-            subtitle: 'In your garage',
-            icon: Icons.motorcycle,
-            gradient: AppTheme.accentGradient,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: StatsCard(
-            title: 'Service Due',
-            value: '1',
-            subtitle: 'Next 30 days',
-            icon: Icons.build,
-            gradient: const LinearGradient(
-              colors: [AppTheme.accent, Color(0xFFFF8C00)],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+class _HomeTile extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+  final bool isOhlins;
 
-  Widget _buildQuickActions(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Quick Actions',
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          height: 100,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
+  const _HomeTile({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+    this.isOhlins = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: color,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildQuickActionCard(
-                context,
-                'Book Service',
-                Icons.calendar_today,
-                AppTheme.primaryRed,
-                () {},
+              Icon(
+                icon,
+                color: isOhlins ? Colors.black : Colors.white,
+                size: 36,
               ),
-              _buildQuickActionCard(
-                context,
-                'Find Centre',
-                Icons.location_on,
-                AppTheme.accent,
-                () {},
-              ),
-              _buildQuickActionCard(
-                context,
-                'Setup Guide',
-                Icons.tune,
-                const Color(0xFF4CAF50),
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SetupWizardScreen()),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isOhlins ? Colors.black : Colors.white,
+                  height: 1.2,
                 ),
-              ),
-              _buildQuickActionCard(
-                context,
-                'Racing Support',
-                Icons.speed,
-                const Color(0xFF9C27B0),
-                () {},
               ),
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildQuickActionCard(BuildContext context, String title, IconData icon, Color color, VoidCallback onTap) {
-    return Container(
-      width: 120,
-      margin: const EdgeInsets.only(right: 16),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  color.withOpacity(0.2),
-                  color.withOpacity(0.1),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: color.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  size: 28,
-                  color: color,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: AppTheme.textPrimary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
+}
 
-  Widget _buildFeaturesGrid(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Explore Features',
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: FeatureCard(
-                    title: 'My Garage',
-                    subtitle: 'Manage your vehicles',
-                    icon: Icons.garage,
-                    gradient: AppTheme.accentGradient,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MyGarageScreen()),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: FeatureCard(
-                    title: 'Dyno Reports',
-                    subtitle: 'View performance data',
-                    icon: Icons.analytics,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const DynoReportScreen()),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: FeatureCard(
-                    title: 'Course Booking',
-                    subtitle: 'Training & education',
-                    icon: Icons.school,
-                    gradient: const LinearGradient(
-                      colors: [AppTheme.accent, Color(0xFFFF8C00)],
-                    ),
-                    onTap: () {},
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: FeatureCard(
-                    title: 'Product Catalog',
-                    subtitle: 'Browse & order parts',
-                    icon: Icons.shopping_bag,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4CAF50), Color(0xFF388E3C)],
-                    ),
-                    onTap: () {},
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+class _CarbonFibreBackground extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _CarbonFibrePainter(),
     );
   }
+}
+
+class _CarbonFibrePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF161616)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRect(Offset.zero & size, paint);
+
+    final tilePaint = Paint()
+      ..color = const Color(0xFF1C1C1C)
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = const Color(0xFF0A0A0A)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.5;
+
+    const tileSize = 12.0;
+    for (double y = 0; y < size.height; y += tileSize) {
+      for (double x = 0; x < size.width; x += tileSize) {
+        final isOffset = (y / tileSize).floor() % 2 == 0;
+        final xPos = isOffset ? x : x + tileSize / 2;
+        
+        final rect = Rect.fromLTWH(xPos % size.width, y, tileSize - 0.5, tileSize - 0.5);
+        canvas.drawRect(rect, tilePaint);
+        canvas.drawRect(rect, borderPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
