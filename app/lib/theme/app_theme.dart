@@ -16,6 +16,11 @@ class AppColors {
   static const Color textMuted = Color(0xFF999999);
 }
 
+/// Strip yellow underlines from every text style in the theme
+TextTheme _noUnderlineTextTheme(TextTheme base) {
+  return base.apply(decoration: TextDecoration.none);
+}
+
 class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
@@ -26,7 +31,7 @@ class AppTheme {
         secondary: AppColors.gold,
         surface: AppColors.card,
       ),
-      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
+      textTheme: _noUnderlineTextTheme(GoogleFonts.interTextTheme(ThemeData.dark().textTheme)),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.background,
         elevation: 0,

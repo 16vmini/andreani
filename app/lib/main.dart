@@ -35,6 +35,13 @@ class AndreaniApp extends StatelessWidget {
       title: 'Andreani Group',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
+      builder: (context, child) {
+        // Kill yellow underlines globally — covers all inline GoogleFonts calls
+        return DefaultTextStyle(
+          style: const TextStyle(decoration: TextDecoration.none),
+          child: child!,
+        );
+      },
       home: const AppShell(),
       routes: {
         '/garage': (context) => const GarageScreen(),
