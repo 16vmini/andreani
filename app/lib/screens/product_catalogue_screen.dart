@@ -26,10 +26,12 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
             child: Row(
@@ -80,8 +82,9 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
               itemCount: _products.length,
               itemBuilder: (context, i) => _ProductCard(product: _products[i]),
             ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
